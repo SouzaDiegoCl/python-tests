@@ -1,13 +1,13 @@
 # Gerenciamento de equinos — QTS AT1
 
-Projeto da atividade **Engenharia de Testes Unitários, Cobertura de Código e Governança de IA**. O domínio é um serviço de gerenciamento de equinos em um haras. A versão atual permite cadastrar equinos, listá-los e associá-los a estábulos que já estejam no repositório em memória. As regras e seus limites estão em [PRD.md](PRD.md).
+Projeto da atividade **Engenharia de Testes Unitários, Cobertura de Código e Governança de IA**. O domínio é um serviço de gerenciamento de equinos em um haras. A versão atual permite cadastrar e listar equinos e estábulos, além de associá-los. As regras e seus limites estão em [PRD.md](PRD.md).
 
 ## Estado atual
 
 - O projeto usa `uv`, Python 3.14, FastAPI e Pydantic. A configuração de Pytest e `pytest-cov` já está em `pyproject.toml`.
 - As regras de contexto para manutenção do projeto estão em [AGENTS.md](AGENTS.md).
-- A pasta `tests/` ainda está vazia por decisão desta etapa. Não há resultado de testes nem cobertura de 100% para apresentar neste momento.
-- O cadastro de estábulos por API, a validação de lotação e a sincronização de `quantidade_equinos` ainda não foram implementados.
+- A pasta `tests/` contém 35 casos de integração, 35 casos unitários e dados reutilizáveis em `tests/constants.py`. A última verificação reportou 100% de cobertura de linhas e ramificações em `app`.
+- A sincronização de `quantidade_equinos` ainda não foi implementada.
 
 ## Estrutura
 
@@ -20,7 +20,7 @@ Projeto da atividade **Engenharia de Testes Unitários, Cobertura de Código e G
 | `PRD.md` | Requisitos e critérios de aceite da versão atual. |
 | `AGENTS.md` | Regras de contexto para trabalho com IA. |
 | `AI_USAGE.md` | Registro do uso de IA e das verificações realizadas. |
-| `tests/` | Local reservado para a futura suíte de testes. |
+| `tests/` | Testes unitários e de integração, fixtures, factories e constantes compartilhadas. |
 
 ## Pré-requisitos e execução
 
@@ -47,23 +47,23 @@ Para listar os equinos cadastrados:
 curl http://127.0.0.1:8000/equinos
 ```
 
-Os dados ficam apenas na memória e são perdidos quando o processo é encerrado. A rota de associação pressupõe que um estábulo já tenha sido adicionado ao repositório; ainda não há rota para criá-lo.
+Os dados ficam apenas na memória e são perdidos quando o processo é encerrado. Antes de associar um equino, crie um estábulo pela rota `POST /estabulos`. Cada estábulo aceita associações até sua capacidade; uma tentativa adicional retorna HTTP 400 sem alterar as associações existentes. Equinos podem ser cadastrados mesmo quando um estábulo está lotado.
 
-## Testes e cobertura — próxima etapa
+## Testes e cobertura
 
-Os comandos exigidos na apresentação da atividade serão:
+Para executar os testes e medir a cobertura:
 
 ```bash
 uv run pytest -v
 uv run pytest --cov=app --cov-branch --cov-report=term-missing
 ```
 
-Como ainda não existem arquivos de teste, o primeiro comando encontra **0 testes** e encerra com código 5. A meta de 100% de linhas e ramificações só poderá ser verificada depois da implementação da suíte. A configuração atual mede todo o pacote `app`, incluindo API, repositórios, esquemas e serviço.
+A suíte atual contém **70 casos**: 35 de integração e 35 unitários. Todos passaram nos dois comandos. A medição com ramificações reportou **100% de cobertura total** em `app`, incluindo API, repositórios, esquemas e serviço. Essa medida indica execução das linhas e ramificações, não substitui a revisão dos cenários e das asserções.
 
 ## Transparência sobre o uso de IA
 
-Foi usado o OpenAI Codex para revisar o projeto, corrigir inconsistências e ajudar a redigir a documentação. O que a ferramenta fez, como o resultado foi conferido e o que ainda depende de auditoria estão descritos em [AI_USAGE.md](AI_USAGE.md). A revisão final pelo autor e a suíte automatizada permanecem pendentes.
+Foi usado o OpenAI Codex para revisar o projeto, organizar os testes de integração, criar testes unitários e ajudar a redigir a documentação. O que a ferramenta fez, como o resultado foi conferido e o que ainda depende de auditoria estão descritos em [AI_USAGE.md](AI_USAGE.md). A revisão final pelo autor permanece pendente.
 
 ## Entrega da atividade
 
-Para a submissão final, ainda será necessário implementar a suíte de testes, comprovar 100% de cobertura de linhas e ramificações, publicar o repositório no GitHub e gravar o vídeo individual de até quatro minutos com áudio e demonstração dos comandos acima. O repositório e o vídeo precisam estar acessíveis publicamente antes do prazo da disciplina.
+Para a submissão final, ainda será necessário publicar o repositório no GitHub e gravar o vídeo individual de até quatro minutos com áudio e demonstração dos comandos acima. O repositório e o vídeo precisam estar acessíveis publicamente antes do prazo da disciplina.

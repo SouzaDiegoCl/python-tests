@@ -56,13 +56,12 @@ def associar_equino_estabulo(equino_id: str, estabulo_id: str):
 def criar_estabulo(payload: CriarEstabulo):
     try:
         estabulo = service.criar_estabulo(payload)
-        return {
-            "message": f"Estábulo {estabulo.nome_identificador} criado com sucesso."
-        }
+        return estabulo
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)
         ) from exc
+
 
 @app.get("/estabulos", status_code=status.HTTP_200_OK)
 def listar_estabulos():
