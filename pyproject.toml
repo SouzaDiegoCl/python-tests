@@ -1,0 +1,50 @@
+[project]
+name = "gerenciamento-equinos"
+version = "0.1.0"
+description = "Serviço para gerenciamento de equinos em um haras."
+readme = "README.md"
+authors = [
+    { name = "SouzaDiegoCl", email = "souzadiegocl@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.142.2",
+    "httpx>=0.28.1",
+    "pydantic>=2.13.5",
+]
+
+[tool.uv]
+package = false
+
+[project.scripts]
+atividade1 = "atividade1:main"
+
+[build-system]
+requires = ["uv_build>=0.12.15,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "faker>=40.40.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.16.0",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=app --cov-report=term-missing --cov-report=html"
+markers = [
+    "unit: testes unitarios isolados",
+    "integration: testes de integracao de servicos e endpoints",
+    "mocks: testes com isolamento de dependencias e test doubles",
+]
+
+filterwarnings = [
+    "ignore::starlette.exceptions.StarletteDeprecationWarning",
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+omit = [
+    "*/__init__.py",
+]
